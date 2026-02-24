@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>English → Kannada Translator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>English → Kannada Translator</h1>
+
+    <textarea id="inputText" placeholder="Type English text..."></textarea>
+
+    <div class="buttons">
+        <button onclick="translateText()">Translate</button>
+        <button onclick="speakEnglish()">Speak English</button>
+        <button onclick="speakKannada()">Speak Kannada</button>
+    </div>
+
+    <h2>Kannada Output</h2>
+    <textarea id="outputText" readonly></textarea>
+</div>
+
+<script>
+async function translateText() {
+    let text = document.getElementById("inputText").value;
+
+    let response = await fetch("/translate", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({text: text})
+    });
+
+    let data = await response.json();
+    document.getElementById("outputText").value = data.translated;
+}
+
+function speakEnglish() {
+    let text = document.getElementById("inputText").value;
+    let speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-US";
+    speechSynthesis.speak(speech);
+}
+
+function speakKannada() {
+    let text = document.getElementById("outputText").value;
+    let speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "kn-IN";
+    speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
